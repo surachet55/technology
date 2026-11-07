@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เทคโนโลยีดิจิทัลและอินเทอร์เน็ต หน่วยที่ 1</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  body{
+    font-family:'Kanit',sans-serif;
+    background-color:#ffffff;
+    background-image:
+      radial-gradient(900px 500px at -5% -10%, rgba(124,58,237,.14), transparent 60%),
+      radial-gradient(800px 500px at 105% 105%, rgba(249,115,22,.14), transparent 60%),
+      radial-gradient(500px 300px at 100% 0%, rgba(167,139,250,.10), transparent 60%);
+    background-attachment:fixed;
+  }
+  .fade-in{animation:fadeIn .45s ease-out both}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .card{background:#fff;border:1px solid #ede9fe;border-radius:1.5rem;box-shadow:0 8px 30px -14px rgba(109,40,217,.25)}
+  .ring-bg{stroke:#ede9fe}
+  .ring-fg{stroke:url(#ringGrad);transition:stroke-dashoffset .8s ease}
+  .bar{background:linear-gradient(90deg,#7c3aed,#f97316);transition:width .7s ease}
+  ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#ddd6fe;border-radius:6px}
+  .nav-btn{transition:all .2s}
+  .nav-btn.active{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;box-shadow:0 10px 20px -10px rgba(109,40,217,.7)}
+  .nav-btn:not(.active):hover{background:#f5f3ff;color:#6d28d9}
+  .mnav.active{color:#7c3aed}.mnav.active .dot{background:#f97316}
+  @media print{
+    body *{visibility:hidden}
+    #printArea,#printArea *{visibility:visible}
+    #printArea{position:absolute;left:0;top:0;width:100%;padding:40px}
+    .no-print{display:none!important}
+  }
+</style>
+</head>
+<body class="text-slate-800">
+
+<svg width="0" height="0" class="absolute">
+  <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#f97316"/></linearGradient></defs>
+</svg>
+
+<div class="min-h-screen flex">
+  <!-- Sidebar -->
+  <aside class="hidden lg:flex w-72 shrink-0 flex-col bg-white/85 backdrop-blur border-r border-violet-100 h-screen sticky top-0 z-20">
+    <div class="p-6 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-600 to-fuchsia-500 text-white flex items-center justify-center text-xl shadow-lg shadow-violet-300/50"><i class="fa-solid fa-graduation-cap"></i></div>
+        <div>
+          <div class="font-bold text-slate-900 leading-tight">Digital Classroom</div>
+          <div class="text-xs text-slate-400">ห้องเรียนออนไลน์</div>
+        </div>
+      </div>
+    </div>
+    <nav id="sideNav" class="px-4 space-y-1.5 flex-1"></nav>
+    <div class="m-4 p-4 rounded-2xl bg-gradient-to-br from-violet-600 to-purple-700 text-white relative overflow-hidden">
+      <div class="absolute -right-6 -top-6 w-20 h-20 rounded-full bg-orange-400/40"></div>
+      <div class="text-xs text-violet-200">ความคืบหน้าโดยรวม</div>
+      <div class="text-3xl font-bold mt-1" id="sideOverall">0%</div>
+      <div class="h-2 bg-white/20 rounded-full mt-3 overflow-hidden"><div id="sideBar" class="h-full bg-orange-400 rounded-full transition-all duration-700" style="width:0%"></div></div>
+    </div>
+    <div class="px-6 pb-5 text-[11px] text-slate-400 text-center leading-relaxed">โดย ครูสุรเชษฐ์ ศิมานนท์<br>แผนกวิชาเทคโนโลยีธุรกิจดิจิทัล</div>
+  </aside>
+
+  <div class="flex-1 min-w-0 flex flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-10 bg-white/80 backdrop-blur border-b border-violet-100 no-print">
+      <div class="max-w-6xl mx-auto px-4 lg:px-8 h-16 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <div class="text-xs text-orange-500 font-medium">การใช้งานคอมพิวเตอร์</div>
+          <div class="font-semibold text-slate-800 truncate">เทคโนโลยีดิจิทัลและอินเทอร์เน็ต · หน่วยที่ 1</div>
+        </div>
+        <button onclick="openProfile()" class="flex items-center gap-3 pl-2 pr-4 py-1.5 rounded-full border border-violet-100 bg-white hover:border-violet-300 transition shrink-0">
+          <span id="avatar" class="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 text-white flex items-center justify-center font-bold">?</span>
+          <span class="text-left hidden sm:block">
+            <span id="hdrName" class="block text-sm font-medium leading-tight">ตั้งชื่อผู้เรียน</span>
+            <span id="hdrStatus" class="block text-[11px] text-slate-400 leading-tight">ยังไม่เริ่มเรียน</span>
+          </span>
+        </button>
+      </div>
+    </header>
+
+    <main id="view" class="max-w-6xl w-full mx-auto p-4 lg:p-8 pb-28 lg:pb-12"></main>
+  </div>
+</div>
+
+<!-- Mobile bottom nav -->
+<nav id="mobNav" class="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur border-t border-violet-100 grid grid-cols-5 no-print"></nav>
+
+<!-- Generic modal -->
+<div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+  <div class="bg-white rounded-3xl p-7 max-w-sm w-full shadow-2xl text-center">
+    <div id="mIcon" class="text-5xl mb-3"></div>
+    <h3 id="mTitle" class="text-xl font-bold mb-2"></h3>
+    <p id="mMsg" class="text-slate-500 mb-5 whitespace-pre-line leading-relaxed"></p>
+    <button onclick="closeModal()" class="w-full py-2.5 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-medium transition">เข้าใจแล้ว</button>
+  </div>
+</div>
+
+<!-- Profile modal -->
+<div id="profileModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+  <div class="bg-white rounded-3xl p-7 max-w-md w-full shadow-2xl">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-12 h-12 rounded-2xl bg-violet-100 text-violet-600 flex items-center justify-center text-xl"><i class="fa-regular fa-id-badge"></i></div>
+      <div><h3 class="font-bold text-lg">ข้อมูลผู้เรียน</h3><p class="text-sm text-slate-400">ชื่อนี้ใช้บันทึกคะแนนและความคืบหน้า</p></div>
+    </div>
+    <label class="block text-sm font-medium mb-1.5">ชื่อ-นามสกุล <span class="text-orange-500">*</span></label>
+    <input id="nameInput" type="text" placeholder="เช่น นายรักเรียน ตั้งใจศึกษา" class="w-full px-4 py-3 rounded-xl border border-violet-200 bg-violet-50/40 focus:outline-none focus:ring-4 focus:ring-violet-200 focus:border-violet-500 text-lg">
+    <div class="flex gap-3 mt-5">
+      <button onclick="closeProfile()" class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-medium">ยกเลิก</button>
+      <button onclick="saveProfile()" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold hover:opacity-90">บันทึก</button>
+    </div>
+    <button onclick="resetAll()" class="mt-4 w-full text-xs text-slate-400 hover:text-red-500 transition">ล้างความคืบหน้าทั้งหมดในเครื่องนี้</button>
+  </div>
+</div>
+
+<!-- Teacher sheet instruction -->
+<div id="sheetModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/70 backdrop-blur-sm p-4 overflow-y-auto">
+  <div class="bg-white rounded-3xl p-6 md:p-8 max-w-2xl w-full shadow-2xl relative my-auto">
+    <button onclick="toggleSheet(false)" class="absolute top-4 right-4 w-8 h-8 rounded-full hover:bg-slate-100 text-slate-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
+    <div class="flex items-center mb-5 pb-4 border-b border-slate-100"><i class="fa-solid fa-table-list text-3xl text-emerald-600 mr-4"></i><h3 class="text-xl font-bold">วิธีตั้งค่าบันทึกคะแนนลง Google Sheets (สำหรับครู)</h3></div>
+    <div class="text-sm text-slate-600 space-y-3 max-h-[60vh] overflow-y-auto pr-2">
+      <ol class="list-decimal pl-5 space-y-2">
+        <li>สร้าง Google Sheets ใหม่ ตั้งหัวคอลัมน์แถวแรก: <code class="bg-slate-100 px-2 rounded">A1: Date</code> <code class="bg-slate-100 px-2 rounded">B1: Name</code> <code class="bg-slate-100 px-2 rounded">C1: Score</code></li>
+        <li>เมนู ส่วนขยาย (Extensions) &gt; Apps Script แล้วลบโค้ดเดิม วางโค้ดด้านล่าง</li>
+      </ol>
+      <div class="bg-slate-900 text-emerald-400 p-4 rounded-xl font-mono text-xs overflow-x-auto relative">
+        <button onclick="copyCode(this)" class="absolute top-2 right-2 bg-slate-700 hover:bg-slate-600 text-white text-xs py-1 px-3 rounded">คัดลอกโค้ด</button>
+<pre id="scriptCode">function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var rowData = [];
+  var timestamp = Utilities.formatDate(new Date(), "GMT+7", "dd/MM/yyyy HH:mm:ss");
+  rowData.push(timestamp);
+  rowData.push(e.parameter.name);
+  rowData.push(e.parameter.score);
+  sheet.appendRow(rowData);
+  return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
+}</pre>
+      </div>
+      <ol class="list-decimal pl-5 space-y-2" start="3">
+        <li>กด Deploy &gt; New deployment &gt; เลือก Web App &gt; Who has access = Anyone &gt; Deploy (ยืนยันสิทธิ์บัญชี Google)</li>
+        <li>คัดลอก Web App URL ไปใส่ในตัวแปร <code class="bg-violet-50 text-violet-600 px-2 rounded font-bold">GOOGLE_SCRIPT_URL</code> ในโค้ด HTML</li>
+      </ol>
+    </div>
+    <div class="mt-5 pt-4 border-t border-slate-100 text-right"><button onclick="toggleSheet(false)" class="px-6 py-2 bg-slate-100 hover:bg-slate-200 rounded-xl font-medium">ปิด</button></div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   ข้อมูลหลักสูตร (แก้ไข/เพิ่มได้ที่นี่)
+   ========================================================= */
+const COURSE = { unitNo: 1, title: 'เทคโนโลยีดิจิทัลและอินเทอร์เน็ต', subtitle: 'การใช้งานคอมพิวเตอร์ · สาระการเรียนรู้ หน่วยที่ 1' };
+const PASS_SCORE = 6;          // เกณฑ์ผ่านแบบทดสอบ (จาก 10)
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyhWhvDdXJn4zLF-10wEIRp8ogWPKfecfMbcBfRWqqVB0hXDmIYLbrX0aeoGIZmICvPw/exec';
+
+const topics = [
+  { id:'meaning', title:'ความหมายของคอมพิวเตอร์', icon:'fa-book-open', tint:'violet', html:`
+    <div class="card p-6 md:p-8">
+      <p class="text-lg leading-relaxed text-slate-700 mb-5">หมายถึง การนับ หรือ การคำนวณ โดยพจนานุกรม ฉบับราชบัณฑิตยสถาน พ.ศ. 2554 ได้ให้ความหมายไว้ว่า:</p>
+      <blockquote class="border-l-4 border-orange-400 pl-5 py-4 bg-orange-50/60 rounded-r-2xl text-slate-700 italic text-lg mb-6">"เครื่องอิเล็กทรอนิกส์แบบอัตโนมัติ ทำหน้าที่เหมือนสมองกล ใช้สำหรับแก้ปัญหาต่าง ๆ ที่ง่ายและซับซ้อน โดยวิธีทางคณิตศาสตร์"</blockquote>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-5 rounded-2xl bg-violet-50/60 border border-violet-100 flex gap-4"><div class="w-11 h-11 rounded-xl bg-orange-100 text-orange-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-bolt"></i></div><div><h4 class="font-bold">เครื่องจักรอิเล็กทรอนิกส์</h4><p class="text-sm text-slate-600 mt-1.5 leading-relaxed">ถูกสร้างขึ้นเพื่อทำงานแทนมนุษย์ในด้านการคิดคำนวณ ทำงานด้วยความเร็วสูง</p></div></div>
+        <div class="p-5 rounded-2xl bg-violet-50/60 border border-violet-100 flex gap-4"><div class="w-11 h-11 rounded-xl bg-violet-100 text-violet-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-memory"></i></div><div><h4 class="font-bold">การจัดเก็บและประมวลผล</h4><p class="text-sm text-slate-600 mt-1.5 leading-relaxed">สามารถจำข้อมูลทั้งตัวเลขและตัวอักษรได้ จัดการกับสัญลักษณ์ รับ-ส่งข้อมูล และเปรียบเทียบตรรกศาสตร์ได้</p></div></div>
+      </div>
+    </div>`},
+  { id:'components', title:'องค์ประกอบของคอมพิวเตอร์', icon:'fa-cubes', tint:'orange', html:`
+    <div class="grid md:grid-cols-2 gap-5">
+      <div class="card p-6 hover:-translate-y-1 transition"><div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-700 text-2xl flex items-center justify-center mb-4"><i class="fa-solid fa-print"></i></div><h3 class="text-lg font-bold mb-2">1. ฮาร์ดแวร์ (Hardware)</h3><p class="text-slate-600 text-sm md:text-base leading-relaxed">ส่วนอุปกรณ์คอมพิวเตอร์ที่ประกอบขึ้นแล้วสามารถจับต้องได้ เช่น เครื่องคอมพิวเตอร์, เครื่องพิมพ์, เมาส์</p></div>
+      <div class="card p-6 hover:-translate-y-1 transition"><div class="w-14 h-14 rounded-2xl bg-violet-100 text-violet-600 text-2xl flex items-center justify-center mb-4"><i class="fa-brands fa-windows"></i></div><h3 class="text-lg font-bold mb-2">2. โปรแกรม (Software)</h3><p class="text-slate-600 text-sm md:text-base leading-relaxed">ส่วนประกอบโปรแกรมที่เป็นคำสั่งในการควบคุมการทำงานของเครื่องคอมพิวเตอร์ ให้สามารถทำงานตามลำดับขั้นตอน</p></div>
+      <div class="card p-6 hover:-translate-y-1 transition"><div class="w-14 h-14 rounded-2xl bg-orange-100 text-orange-500 text-2xl flex items-center justify-center mb-4"><i class="fa-solid fa-users"></i></div><h3 class="text-lg font-bold mb-2">3. บุคลากร (Peopleware)</h3><p class="text-slate-600 text-sm md:text-base leading-relaxed">บุคลากรที่สั่งให้เครื่องทำงาน (User) เครื่องคอมพิวเตอร์โดยมากต้องใช้บุคลากรในการสั่งงานเพื่อให้ระบบขับเคลื่อนไปได้</p></div>
+      <div class="card p-6 hover:-translate-y-1 transition"><div class="w-14 h-14 rounded-2xl bg-pink-100 text-pink-600 text-2xl flex items-center justify-center mb-4"><i class="fa-solid fa-gears"></i></div><h3 class="text-lg font-bold mb-2">4. กระบวนการ (Procedure)</h3><p class="text-slate-600 text-sm md:text-base leading-relaxed">ขั้นตอนการทำงานเพื่อให้ได้ผลลัพธ์ตามต้องการ ผู้ใช้จะต้องทราบขั้นตอน เพื่อให้ได้งานที่ถูกต้องและมีประสิทธิภาพ</p></div>
+    </div>`},
+  { id:'principles', title:'หลักการทำงานของคอมพิวเตอร์', icon:'fa-server', tint:'violet', html:`
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      ${[
+        ['1','การรับข้อมูล (Input)','การนำข้อมูล หรือ คำสั่งเข้าสู่เครื่องคอมพิวเตอร์โดยผ่านอุปกรณ์รับข้อมูลต่าง ๆ เช่น คีย์บอร์ด, เมาส์','from-violet-500 to-purple-600'],
+        ['2','การประมวลผล (Process)','การนำข้อมูลมาคิดคำนวณหรือประมวลผลตามชุดคำสั่ง (โปรแกรม) เพื่อให้ได้ผลลัพธ์ โดยใช้ CPU','from-fuchsia-500 to-pink-500'],
+        ['3','การจัดเก็บ (Storage)','การเก็บข้อมูลชั่วคราวขณะประมวลผล (RAM) และเก็บข้อมูลถาวรเมื่อทำงานเสร็จ (Harddisk, SSD)','from-orange-500 to-amber-500'],
+        ['4','การแสดงผล (Output)','นำผลลัพธ์ที่ได้มาแสดงในรูปแบบที่มนุษย์เข้าใจ เช่น ข้อความ ภาพ เสียง ผ่านทางหน้าจอ, ลำโพง, เครื่องพิมพ์','from-emerald-500 to-teal-500']
+      ].map(s=>`<div class="card p-5 relative overflow-hidden"><div class="w-11 h-11 rounded-xl bg-gradient-to-br ${s[3]} text-white font-bold text-lg flex items-center justify-center mb-4 shadow-lg">${s[0]}</div><h3 class="font-bold mb-2">${s[1]}</h3><p class="text-sm text-slate-600 leading-relaxed">${s[2]}</p></div>`).join('')}
+    </div>
+    <div class="mt-5 p-4 rounded-2xl bg-violet-50 border border-violet-100 text-center text-violet-700 font-medium text-sm md:text-base">
+      Input <i class="fa-solid fa-arrow-right mx-2 text-orange-500"></i> Process <i class="fa-solid fa-arrow-right mx-2 text-orange-500"></i> Storage <i class="fa-solid fa-arrow-right mx-2 text-orange-500"></i> Output
+    </div>`},
+  { id:'usage', title:'การใช้งานคอมพิวเตอร์', icon:'fa-keyboard', tint:'orange', html:`
+    <p class="text-slate-600 mb-5 text-lg">ข้อปฏิบัติเพื่อยืดอายุการใช้งานและดูแลรักษาอุปกรณ์คอมพิวเตอร์ มีดังนี้</p>
+    <div class="grid md:grid-cols-2 gap-5">
+      ${[
+        ['fa-arrows-to-circle','violet','การจัดวางให้เหมาะสม','ควรวางให้มีพื้นที่ว่าง ห่างจากกำแพงหรือด้านหลังจอประมาณ 30 เซนติเมตร เพื่อระบายความร้อนได้ดี'],
+        ['fa-broom','emerald','ทำความสะอาดเป็นประจำ','ป้องกันการสะสมของฝุ่น ซึ่งเป็นสาเหตุหลักที่ทำให้คอมพิวเตอร์ระบายอากาศไม่ดีและเกิดความร้อนสะสม'],
+        ['fa-hard-drive','orange','จัดระเบียบข้อมูล (Defrag)','การจัดระเบียบไฟล์บนฮาร์ดดิสก์ช่วยให้เครื่องอ่านข้อมูลได้เร็วขึ้น ลดการสึกหรอของหัวอ่านฮาร์ดดิสก์'],
+        ['fa-power-off','rose','ปิดและถอดอุปกรณ์ให้ถูกวิธี','Shut down เครื่องตามขั้นตอนเสมอ และถอดอุปกรณ์เชื่อมต่อภายนอกออกหลังใช้งานเสร็จในแต่ละวัน']
+      ].map(i=>`<div class="card p-6 hover:-translate-y-1 transition"><div class="w-12 h-12 rounded-full bg-${i[1]}-100 text-${i[1]}-600 flex items-center justify-center text-xl mb-4"><i class="fa-solid ${i[0]}"></i></div><h4 class="font-bold text-lg mb-2">${i[2]}</h4><p class="text-sm text-slate-600 leading-relaxed">${i[3]}</p></div>`).join('')}
+    </div>`},
+  { id:'digital', title:'เทคโนโลยีดิจิทัล', icon:'fa-robot', tint:'violet', html:`
+    <p class="text-slate-600 mb-6 text-lg">เทคโนโลยีดิจิทัลมีการพัฒนาอย่างก้าวกระโดด ตัวอย่างที่สำคัญในปัจจุบัน ได้แก่:</p>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-center">
+      ${[
+        ['fa-brain','violet','AI','ปัญญาประดิษฐ์ (Artificial Intelligence)'],
+        ['fa-helicopter','teal','Robotics','หุ่นยนต์ และยานยนต์ไร้คนขับ'],
+        ['fa-cloud','sky','Cloud','การประมวลผลและเก็บข้อมูลบนคลาวด์'],
+        ['fa-wifi','orange','IoT','อินเทอร์เน็ตในทุกสิ่ง (Internet of Things)']
+      ].map(i=>`<div class="card p-6 hover:-translate-y-1 transition"><i class="fa-solid ${i[0]} text-4xl text-${i[1]}-500 mb-3"></i><h4 class="font-bold text-lg">${i[2]}</h4><p class="text-sm text-slate-500 mt-1.5">${i[3]}</p></div>`).join('')}
+      <div class="card p-6 hover:-translate-y-1 transition col-span-2"><i class="fa-solid fa-vr-cardboard text-4xl text-fuchsia-500 mb-3"></i><h4 class="font-bold text-lg">Metaverse &amp; VR</h4><p class="text-sm text-slate-500 mt-1.5">โลกเสมือนจริงที่ผสานเข้ากับโลกความจริง</p></div>
+    </div>`},
+  { id:'internet', title:'การใช้งานอินเทอร์เน็ต', icon:'fa-globe', tint:'orange', html:`
+    <div class="card p-6 md:p-8 mb-5 relative overflow-hidden">
+      <div class="absolute -right-8 -bottom-8 text-9xl text-violet-50"><i class="fa-solid fa-globe"></i></div>
+      <div class="relative">
+        <h3 class="text-lg font-bold text-violet-700 mb-3"><i class="fa-solid fa-circle-info mr-2"></i>อินเทอร์เน็ต (Internet) คืออะไร?</h3>
+        <p class="text-slate-600 leading-relaxed text-lg">คือ <strong>เครือข่ายคอมพิวเตอร์ขนาดใหญ่</strong> ที่เชื่อมต่อเครือข่ายย่อยๆ นานาชาติทั่วโลกเข้าด้วยกัน ทำให้ผู้คนสามารถสื่อสาร แลกเปลี่ยนข้อมูลผ่าน อีเมล, เว็บไซต์, หรือสื่อสังคมออนไลน์ ได้อย่างสะดวกรวดเร็วไร้พรมแดน</p>
+      </div>
+    </div>
+    <div class="rounded-3xl p-6 md:p-8 bg-orange-50 border border-orange-100">
+      <h3 class="text-lg font-bold text-orange-700 mb-3"><i class="fa-solid fa-triangle-exclamation mr-2"></i>ข้อควรระวังและโทษของอินเทอร์เน็ต</h3>
+      <p class="text-slate-700 mb-4">หากใช้งานไม่ถูกวิธี อาจทำให้เกิดความเสียหายต่อข้อมูล ทรัพย์สิน หรือสภาพจิตใจได้ ดังนี้:</p>
+      <ul class="space-y-3">
+        <li class="flex gap-3 bg-white p-4 rounded-xl shadow-sm"><span class="w-8 h-8 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-xmark"></i></span><span class="leading-relaxed">เป็นแหล่งเผยแพร่สิ่งผิดกฎหมาย เช่น โปรแกรมละเมิดลิขสิทธิ์ สื่อลามกอนาจาร หรือข่าวปลอม (Fake News)</span></li>
+        <li class="flex gap-3 bg-white p-4 rounded-xl shadow-sm"><span class="w-8 h-8 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-bug"></i></span><span class="leading-relaxed">เสี่ยงต่อ <strong>ไวรัสคอมพิวเตอร์ (Malware/Virus)</strong> ที่สามารถเจาะระบบ สร้างความเสียหาย หรือขโมยข้อมูลสำคัญได้</span></li>
+        <li class="flex gap-3 bg-white p-4 rounded-xl shadow-sm"><span class="w-8 h-8 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center shrink-0"><i class="fa-solid fa-mask"></i></span><span class="leading-relaxed">อาชญากรรมทางไซเบอร์ (Cybercrime) เช่น การหลอกลวงโอนเงิน การกลั่นแกล้งออนไลน์ (Cyberbullying)</span></li>
+      </ul>
+    </div>`}
+];
+
+const assignments = [
+  { id:'a1', title:'ใบงานที่ 1: ฮาร์ดแวร์และซอฟต์แวร์รอบตัว', desc:'ยกตัวอย่างฮาร์ดแวร์ 5 ชิ้น และซอฟต์แวร์ 5 รายการที่คุณใช้ในชีวิตประจำวัน พร้อมบอกหน้าที่ของแต่ละอย่างสั้น ๆ', points:10, topic:'องค์ประกอบของคอมพิวเตอร์' },
+  { id:'a2', title:'ใบงานที่ 2: หลักการทำงาน 4 ขั้นตอน', desc:'อธิบายตัวอย่าง "การสั่งพิมพ์เอกสาร" ว่าผ่านขั้นตอน Input → Process → Storage → Output อย่างไร', points:10, topic:'หลักการทำงานของคอมพิวเตอร์' },
+  { id:'a3', title:'ใบงานที่ 3: ใช้อินเทอร์เน็ตอย่างปลอดภัย', desc:'ยกตัวอย่างภัยออนไลน์ 1 กรณี (เช่น ข่าวปลอม การหลอกโอนเงิน) และเสนอวิธีป้องกันอย่างน้อย 3 ข้อ', points:10, topic:'การใช้งานอินเทอร์เน็ต' }
+];
+
+const quizQuestions = [
+  { q:"ความหมายของคอมพิวเตอร์ตามพจนานุกรม ฉบับราชบัณฑิตยสถาน ตรงกับข้อใดมากที่สุด?", options:["อุปกรณ์เล่นเกม","เครื่องจักรอิเล็กทรอนิกส์แบบอัตโนมัติ ทำหน้าที่เหมือนสมองกล","เครื่องมือสื่อสารชนิดหนึ่ง","เครื่องพิมพ์เอกสารความเร็วสูง"], answer:1 },
+  { q:"ส่วนประกอบของอุปกรณ์คอมพิวเตอร์ที่ประกอบขึ้นแล้วสามารถจับต้องได้ เรียกว่าอะไร?", options:["Hardware (ฮาร์ดแวร์)","Software (โปรแกรม)","Peopleware (บุคลากร)","Procedure (กระบวนการ)"], answer:0 },
+  { q:"ข้อใดคือความหมายของ โปรแกรม (Software)?", options:["บุคคลที่ใช้งานเครื่องคอมพิวเตอร์","เครื่องมือที่สามารถจับต้องได้","คำสั่งในการควบคุมการทำงานของเครื่องคอมพิวเตอร์","ขั้นตอนการทำความสะอาดเครื่อง"], answer:2 },
+  { q:"บุคลากรที่สั่งให้เครื่องคอมพิวเตอร์ทำงาน เรียกว่าอะไร?", options:["Programmer","Admin","Hardware","User (ผู้ใช้)"], answer:3 },
+  { q:"การจัดเก็บข้อมูลชั่วคราวในขณะที่มีการประมวลผล (แรม) อยู่ในหลักการทำงานขั้นตอนใด?", options:["Input (การรับข้อมูล)","Process (การประมวลผล)","Storage (การจัดเก็บข้อมูล)","Output (การแสดงผล)"], answer:2 },
+  { q:"ข้อใดคือการจัดวางคอมพิวเตอร์ที่ถูกต้อง?", options:["วางติดกำแพงเพื่อประหยัดพื้นที่","วางให้ห่างจากกำแพงประมาณ 30 เซนติเมตร","วางซ้อนทับกันหลายๆ เครื่อง","วางในที่ที่แสงแดดส่องถึงโดยตรง"], answer:1 },
+  { q:"การจัดระเบียบข้อมูลบนฮาร์ดดิสก์ (Defrag) มีประโยชน์อย่างไร?", options:["ทำให้หน้าจอคอมพิวเตอร์สว่างขึ้น","ช่วยให้คอมพิวเตอร์ทำงานอ่านไฟล์ได้เร็วขึ้น","ทำให้ไม่ต้องใช้โปรแกรมแอนตี้ไวรัส","ทำให้อุปกรณ์ฮาร์ดแวร์ใหญ่ขึ้น"], answer:1 },
+  { q:"ข้อใดต่อไปนี้ จัดอยู่ในกลุ่ม 'เทคโนโลยีดิจิทัล' ในปัจจุบันที่เรียนรู้ในบทนี้?", options:["วิทยุ AM/FM","AI, โดรน, และ Cloud Computing","เครื่องพิมพ์ดีดแบบดั้งเดิม","โทรทัศน์จอตู้"], answer:1 },
+  { q:"อินเทอร์เน็ต (Internet) มีลักษณะอย่างไร?", options:["เครือข่ายคอมพิวเตอร์ขนาดใหญ่ที่เชื่อมต่อกันทั่วโลก","เครือข่ายที่ใช้ได้เฉพาะในโรงเรียนเท่านั้น","โปรแกรมสำหรับพิมพ์เอกสาร","อุปกรณ์ฮาร์ดแวร์ชนิดหนึ่ง"], answer:0 },
+  { q:"ข้อใดคือ 'โทษและข้อควรระวังของอินเทอร์เน็ต' ที่กล่าวถึงในบทเรียน?", options:["ทำให้ติดต่อสื่อสารกันง่ายขึ้น","ใช้ค้นหาข้อมูลทำรายงานได้รวดเร็ว","เป็นที่เผยแพร่สิ่งผิดกฎหมายและเสี่ยงต่อไวรัสคอมพิวเตอร์","สามารถซื้อขายสินค้าออนไลน์ได้"], answer:2 }
+];
+
+/* =========================================================
+   สถานะผู้เรียน (เก็บในเครื่องด้วย localStorage)
+   ========================================================= */
+const KEY = 'lv1_classroom_v1';
+let state = { name:'', lessons:{}, assign:{}, attempts:[] };
+function loadState(){ try{ const s = JSON.parse(localStorage.getItem(KEY)); if(s) state = Object.assign(state, s); }catch(e){} }
+function saveState(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function metrics(){
+  const lessonsDone = topics.filter(t => state.lessons[t.id]).length;
+  const lessonPct = Math.round(lessonsDone / topics.length * 100);
+  const best = state.attempts.length ? Math.max(...state.attempts.map(a => a.score)) : null;
+  const passed = best !== null && best >= PASS_SCORE;
+  const quizPct = passed ? 100 : 0;
+  const aDone = assignments.filter(a => state.assign[a.id] && state.assign[a.id].done).length;
+  const assignPct = Math.round(aDone / assignments.length * 100);
+  const overall = Math.round((lessonPct + quizPct + assignPct) / 3);
+  return { lessonsDone, lessonPct, best, passed, quizPct, aDone, assignPct, overall };
+}
+function statusOf(m){
+  if(m.overall === 100) return { t:'เรียนจบหน่วยแล้ว', cls:'bg-emerald-100 text-emerald-700', icon:'fa-circle-check' };
+  if(state.attempts.length && !m.passed) return { t:'ต้องสอบแก้ตัว', cls:'bg-orange-100 text-orange-700', icon:'fa-rotate' };
+  if(m.overall === 0) return { t:'ยังไม่เริ่มเรียน', cls:'bg-slate-100 text-slate-600', icon:'fa-hourglass-start' };
+  return { t:'กำลังเรียน', cls:'bg-violet-100 text-violet-700', icon:'fa-book-open-reader' };
+}
+
+/* =========================================================
+   Layout / Navigation
+   ========================================================= */
+const navItems = [
+  { id:'dashboard', label:'แดชบอร์ด', short:'หน้าแรก', icon:'fa-house' },
+  { id:'lessons', label:'บทเรียน', short:'บทเรียน', icon:'fa-book-open' },
+  { id:'quiz', label:'แบบทดสอบ', short:'ทดสอบ', icon:'fa-pen-to-square' },
+  { id:'assign', label:'งานที่ได้รับมอบหมาย', short:'งาน', icon:'fa-list-check' },
+  { id:'scores', label:'ผลคะแนน', short:'คะแนน', icon:'fa-chart-simple' }
+];
+let currentView = 'dashboard', lessonIdx = 0;
+
+function renderChrome(){
+  const m = metrics(), st = statusOf(m);
+  document.getElementById('sideNav').innerHTML = navItems.map(n =>
+    `<button onclick="go('${n.id}')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium text-slate-600 ${currentView===n.id?'active':''}"><i class="fa-solid ${n.icon} w-5 text-center"></i><span class="text-sm">${n.label}</span></button>`).join('');
+  document.getElementById('mobNav').innerHTML = navItems.map(n =>
+    `<button onclick="go('${n.id}')" class="mnav flex flex-col items-center gap-0.5 py-2.5 text-slate-400 ${currentView===n.id?'active':''}"><i class="fa-solid ${n.icon} text-lg"></i><span class="text-[11px]">${n.short}</span><span class="dot w-1 h-1 rounded-full bg-transparent"></span></button>`).join('');
+  document.getElementById('sideOverall').textContent = m.overall + '%';
+  document.getElementById('sideBar').style.width = m.overall + '%';
+  document.getElementById('hdrName').textContent = state.name || 'ตั้งชื่อผู้เรียน';
+  document.getElementById('hdrStatus').textContent = st.t;
+  document.getElementById('avatar').textContent = state.name ? state.name.trim().charAt(0) : '?';
+}
+
+function go(view, arg){
+  if(quizMode === 'doing' && view !== 'quiz' && !confirm('กำลังทำแบบทดสอบอยู่ ต้องการออกจากหน้านี้ใช่หรือไม่? (คำตอบจะหายไป)')) return;
+  if(view !== 'quiz' && quizMode !== 'intro') quizMode = 'intro';
+  if(view === 'quiz' && quizMode === 'result' && arg !== 'keep') quizMode = 'intro';
+  currentView = view;
+  if(view === 'lessons' && typeof arg === 'number') lessonIdx = arg;
+  const el = document.getElementById('view');
+  el.innerHTML = '<div class="fade-in">' + ({ dashboard:viewDashboard, lessons:viewLessons, quiz:viewQuiz, assign:viewAssign, scores:viewScores }[view])() + '</div>';
+  renderChrome();
+  if(view === 'assign' && !gradesSynced){ gradesSynced = true; syncGrades(false); }
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* =========================================================
+   Components
+   ========================================================= */
+function ring(pct, size=140, stroke=12, label=true){
+  const r = (size - stroke) / 2, c = 2 * Math.PI * r, off = c * (1 - pct/100);
+  return `<div class="relative" style="width:${size}px;height:${size}px">
+    <svg width="${size}" height="${size}" class="-rotate-90"><circle class="ring-bg" cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke-width="${stroke}"/><circle class="ring-fg" cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke-width="${stroke}" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"/></svg>
+    ${label ? `<div class="absolute inset-0 flex flex-col items-center justify-center"><span class="text-3xl font-bold text-violet-900">${pct}%</span><span class="text-[11px] text-slate-400">ความคืบหน้า</span></div>` : ''}
+  </div>`;
+}
+function progressBar(pct, h='h-2.5'){ return `<div class="${h} bg-violet-100 rounded-full overflow-hidden"><div class="bar h-full rounded-full" style="width:${pct}%"></div></div>`; }
+function statCard(icon, tint, label, value, sub){
+  return `<div class="card p-5 flex items-center gap-4"><div class="w-12 h-12 rounded-2xl bg-${tint}-100 text-${tint}-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid ${icon}"></i></div><div class="min-w-0"><div class="text-xs text-slate-400">${label}</div><div class="text-2xl font-bold text-slate-800 leading-tight">${value}</div><div class="text-xs text-slate-500 truncate">${sub}</div></div></div>`;
+}
+function checkRow(done, title, sub, onclick){
+  return `<button ${onclick?`onclick="${onclick}"`:''} class="w-full flex items-center gap-4 p-4 rounded-2xl border ${done?'border-emerald-200 bg-emerald-50/60':'border-violet-100 bg-white hover:border-violet-300'} text-left transition">
+    <span class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${done?'bg-emerald-500 text-white':'bg-orange-100 text-orange-500'}"><i class="fa-solid ${done?'fa-check':'fa-hourglass-half'}"></i></span>
+    <span class="min-w-0 flex-1"><span class="block font-semibold text-slate-800">${title}</span><span class="block text-xs text-slate-500">${sub}</span></span>
+    <i class="fa-solid fa-chevron-right text-slate-300 text-sm"></i></button>`;
+}
+
+/* =========================================================
+   Dashboard
+   ========================================================= */
+function viewDashboard(){
+  const m = metrics(), st = statusOf(m);
+  const next = topics.findIndex(t => !state.lessons[t.id]);
+  const ctaIdx = next === -1 ? 0 : next;
+  const ctaText = m.lessonsDone === 0 ? 'เริ่มเรียนเลย' : (next === -1 ? 'ทบทวนบทเรียน' : 'เรียนต่อ');
+  const greet = state.name ? `สวัสดี, ${esc(state.name)} 👋` : 'ยินดีต้อนรับสู่ห้องเรียน 👋';
+  return `
+  <section class="relative overflow-hidden rounded-[2rem] p-6 md:p-8 bg-gradient-to-br from-violet-700 via-purple-700 to-fuchsia-600 text-white shadow-xl shadow-violet-300/40">
+    <div class="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-orange-400/30 blur-sm"></div>
+    <div class="absolute right-24 -bottom-20 w-48 h-48 rounded-full bg-white/10"></div>
+    <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div class="max-w-xl">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium ${st.cls}"><i class="fa-solid ${st.icon}"></i>${st.t}</span>
+        <h1 class="text-2xl md:text-3xl font-bold mt-4">${greet}</h1>
+        <p class="text-violet-100 mt-2 leading-relaxed">${COURSE.subtitle}<br>${COURSE.title}</p>
+        <div class="flex flex-wrap gap-3 mt-6">
+          <button onclick="go('lessons',${ctaIdx})" class="px-6 py-3 rounded-xl bg-orange-500 hover:bg-orange-400 font-semibold shadow-lg shadow-orange-900/30 transition"><i class="fa-solid fa-play mr-2"></i>${ctaText}</button>
+          <button onclick="go('quiz')" class="px-6 py-3 rounded-xl bg-white/15 hover:bg-white/25 font-medium backdrop-blur transition">ทำแบบทดสอบ</button>
+        </div>
+      </div>
+      <div class="self-center bg-white rounded-3xl p-4 shadow-lg">${ring(m.overall)}</div>
+    </div>
+  </section>
+
+  <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+    ${statCard('fa-book-open','violet','บทเรียนที่เรียนแล้ว', `${m.lessonsDone}/${topics.length}`, `${m.lessonPct}% ของหน่วย`)}
+    ${statCard('fa-star','orange','คะแนนสอบสูงสุด', m.best === null ? '–' : `${m.best}/10`, state.attempts.length ? `ทำแล้ว ${state.attempts.length} ครั้ง` : 'ยังไม่ได้ทำแบบทดสอบ')}
+    ${statCard('fa-list-check','fuchsia','งานที่ส่งแล้ว', `${m.aDone}/${assignments.length}`, `${m.assignPct}% ของงานทั้งหมด`)}
+    ${statCard('fa-flag-checkered','emerald','เกณฑ์ผ่านแบบทดสอบ', `${PASS_SCORE}/10`, m.passed ? 'ผ่านเกณฑ์แล้ว' : 'ยังไม่ผ่านเกณฑ์')}
+  </section>
+
+  <section class="grid lg:grid-cols-5 gap-6 mt-6">
+    <div class="card p-6 lg:col-span-3">
+      <div class="flex items-start justify-between gap-3 mb-1">
+        <div><div class="text-xs font-semibold text-orange-500">ความคืบหน้าของหน่วย</div><h2 class="text-xl font-bold">หน่วยที่ ${COURSE.unitNo}: ${COURSE.title}</h2></div>
+        <span class="text-2xl font-bold text-violet-700">${m.lessonPct}%</span>
+      </div>
+      <div class="mb-5 mt-3">${progressBar(m.lessonPct,'h-3')}</div>
+      <div class="space-y-2">
+        ${topics.map((t,i) => { const d = !!state.lessons[t.id]; return `
+        <button onclick="go('lessons',${i})" class="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-violet-50 transition text-left">
+          <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${d?'bg-emerald-100 text-emerald-600':'bg-violet-100 text-violet-600'}"><i class="fa-solid ${d?'fa-check':t.icon}"></i></span>
+          <span class="flex-1 min-w-0"><span class="block font-medium truncate">${i+1}. ${t.title}</span></span>
+          <span class="text-xs px-2.5 py-1 rounded-full font-medium ${d?'bg-emerald-100 text-emerald-700':'bg-slate-100 text-slate-500'}">${d?'เรียนแล้ว':'ยังไม่เรียน'}</span>
+        </button>`; }).join('')}
+      </div>
+    </div>
+
+    <div class="lg:col-span-2 space-y-6">
+      <div class="card p-6">
+        <h2 class="text-lg font-bold mb-4"><i class="fa-solid fa-clipboard-check text-violet-500 mr-2"></i>สถานะการเรียนของฉัน</h2>
+        <div class="space-y-3">
+          ${checkRow(m.lessonsDone === topics.length, 'เรียนครบทุกหัวข้อ', `${m.lessonsDone} จาก ${topics.length} หัวข้อ`, "go('lessons')")}
+          ${checkRow(m.passed, `สอบผ่านเกณฑ์ ${PASS_SCORE}/10`, m.best === null ? 'ยังไม่ได้ทำแบบทดสอบ' : `คะแนนสูงสุด ${m.best}/10`, "go('quiz')")}
+          ${checkRow(m.aDone === assignments.length, 'ส่งงานครบทุกชิ้น', `${m.aDone} จาก ${assignments.length} ชิ้น`, "go('assign')")}
+        </div>
+      </div>
+      <div class="card p-6">
+        <div class="flex justify-between items-center mb-3"><h2 class="text-lg font-bold"><i class="fa-solid fa-bell text-orange-500 mr-2"></i>งานที่ต้องทำ</h2><button onclick="go('assign')" class="text-xs text-violet-600 hover:underline">ดูทั้งหมด</button></div>
+        ${assignments.filter(a => !(state.assign[a.id] && state.assign[a.id].done)).slice(0,3).map(a => `
+          <button onclick="go('assign')" class="w-full flex items-center gap-3 py-2.5 border-b border-violet-50 last:border-0 text-left"><span class="w-2 h-2 rounded-full bg-orange-500"></span><span class="flex-1 text-sm truncate">${a.title}</span><span class="text-xs text-slate-400">${a.points} คะแนน</span></button>`).join('') || '<div class="text-sm text-emerald-600 py-3"><i class="fa-solid fa-circle-check mr-2"></i>ส่งงานครบแล้ว ยอดเยี่ยม!</div>'}
+      </div>
+    </div>
+  </section>`;
+}
+
+/* =========================================================
+   Lessons
+   ========================================================= */
+function viewLessons(){
+  const t = topics[lessonIdx], done = !!state.lessons[t.id], m = metrics();
+  return `
+  <div class="flex items-end justify-between gap-4 mb-5">
+    <div><div class="text-xs font-semibold text-orange-500">หน่วยที่ ${COURSE.unitNo} · หัวข้อ ${lessonIdx+1} จาก ${topics.length}</div><h1 class="text-2xl md:text-3xl font-bold mt-1">${t.title}</h1></div>
+    <div class="hidden sm:block w-48"><div class="flex justify-between text-xs text-slate-500 mb-1"><span>ความคืบหน้า</span><span class="font-semibold text-violet-700">${m.lessonPct}%</span></div>${progressBar(m.lessonPct)}</div>
+  </div>
+  <div class="flex gap-2 overflow-x-auto pb-3 mb-4">
+    ${topics.map((x,i) => { const d = !!state.lessons[x.id], a = i === lessonIdx; return `
+      <button onclick="go('lessons',${i})" class="shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition ${a?'bg-violet-600 text-white border-violet-600 shadow-md shadow-violet-300/50':'bg-white text-slate-600 border-violet-100 hover:border-violet-300'}">
+        <span class="w-5 h-5 rounded-full text-[11px] flex items-center justify-center ${d?'bg-emerald-500 text-white':(a?'bg-white/25':'bg-violet-100 text-violet-600')}">${d?'<i class=\"fa-solid fa-check\"></i>':i+1}</span>${x.title}</button>`; }).join('')}
+  </div>
+  <div class="mb-6">${t.html}</div>
+  <div class="card p-4 md:p-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+    <button onclick="go('lessons',${lessonIdx-1})" ${lessonIdx===0?'disabled':''} class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-medium transition disabled:opacity-40 disabled:cursor-not-allowed w-full sm:w-auto"><i class="fa-solid fa-arrow-left mr-2"></i>ก่อนหน้า</button>
+    <button onclick="toggleLesson('${t.id}')" class="px-6 py-2.5 rounded-xl font-semibold transition w-full sm:w-auto ${done?'bg-emerald-100 text-emerald-700 hover:bg-emerald-200':'bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-200'}"><i class="fa-solid ${done?'fa-circle-check':'fa-check'} mr-2"></i>${done?'เรียนจบหัวข้อนี้แล้ว (กดเพื่อยกเลิก)':'ทำเครื่องหมายว่าเรียนจบแล้ว'}</button>
+    ${lessonIdx === topics.length-1
+      ? `<button onclick="go('quiz')" class="px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-medium transition w-full sm:w-auto">ไปทำแบบทดสอบ<i class="fa-solid fa-arrow-right ml-2"></i></button>`
+      : `<button onclick="go('lessons',${lessonIdx+1})" class="px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-medium transition w-full sm:w-auto">ถัดไป<i class="fa-solid fa-arrow-right ml-2"></i></button>`}
+  </div>`;
+}
+function toggleLesson(id){
+  state.lessons[id] = !state.lessons[id]; saveState();
+  const i = lessonIdx; go('lessons', i);
+  if(state.lessons[id] && topics.every(t => state.lessons[t.id])) showModal('เรียนครบทุกหัวข้อแล้ว!', 'เก่งมาก ต่อไปลองทำแบบทดสอบท้ายบทและส่งงานที่ได้รับมอบหมายได้เลย', 'success');
+}
+
+/* =========================================================
+   Quiz
+   ========================================================= */
+let quizMode = 'intro', currentQuiz = [], quizAnswers = [], lastResult = null;
+
+function viewQuiz(){
+  if(quizMode === 'doing') return quizDoing();
+  if(quizMode === 'result') return quizResult();
+  const m = metrics();
+  return `
+  <div class="mb-6"><div class="text-xs font-semibold text-orange-500">ท้ายบทเรียน</div><h1 class="text-2xl md:text-3xl font-bold mt-1">แบบทดสอบหน่วยที่ ${COURSE.unitNo}</h1></div>
+  <div class="grid lg:grid-cols-5 gap-6">
+    <div class="card p-6 md:p-8 lg:col-span-3">
+      <div class="grid grid-cols-3 gap-3 mb-6 text-center">
+        <div class="p-4 rounded-2xl bg-violet-50"><div class="text-2xl font-bold text-violet-700">10</div><div class="text-xs text-slate-500">ข้อสอบ</div></div>
+        <div class="p-4 rounded-2xl bg-orange-50"><div class="text-2xl font-bold text-orange-600">${PASS_SCORE}/10</div><div class="text-xs text-slate-500">เกณฑ์ผ่าน</div></div>
+        <div class="p-4 rounded-2xl bg-emerald-50"><div class="text-2xl font-bold text-emerald-600">ไม่จำกัด</div><div class="text-xs text-slate-500">จำนวนครั้ง</div></div>
+      </div>
+      <ul class="space-y-2.5 text-slate-600 text-sm mb-6">
+        <li><i class="fa-solid fa-shuffle text-violet-500 w-6"></i>ระบบสลับลำดับข้อและตัวเลือกให้อัตโนมัติทุกครั้ง</li>
+        <li><i class="fa-solid fa-circle-check text-violet-500 w-6"></i>ต้องตอบให้ครบทุกข้อก่อนส่งคำตอบ</li>
+        <li><i class="fa-solid fa-table text-violet-500 w-6"></i>คะแนนจะถูกส่งไปบันทึกในระบบของครูโดยอัตโนมัติ</li>
+        <li><i class="fa-solid fa-magnifying-glass text-violet-500 w-6"></i>หลังส่งจะเห็นเฉลยและข้อที่ตอบผิดทันที</li>
+      </ul>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button onclick="startQuiz()" class="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 hover:opacity-90 text-white font-bold shadow-lg shadow-violet-300/50 transition">${state.attempts.length?'ทำแบบทดสอบอีกครั้ง':'เริ่มทำแบบทดสอบ'} <i class="fa-solid fa-play ml-1"></i></button>
+      </div>
+      <div class="mt-5 text-center"><button onclick="toggleSheet(true)" class="text-xs text-slate-400 hover:text-violet-600 transition"><i class="fa-solid fa-code mr-1"></i>สำหรับครู: ตั้งค่า Google Sheets</button></div>
+    </div>
+    <div class="card p-6 lg:col-span-2">
+      <h2 class="font-bold mb-4"><i class="fa-solid fa-clock-rotate-left text-orange-500 mr-2"></i>ประวัติการสอบของฉัน</h2>
+      ${attemptsList()}
+    </div>
+  </div>`;
+}
+function attemptsList(){
+  if(!state.attempts.length) return '<div class="text-sm text-slate-400 py-6 text-center">ยังไม่มีประวัติ เริ่มทำแบบทดสอบครั้งแรกได้เลย</div>';
+  return `<div class="space-y-2.5">` + state.attempts.slice().reverse().slice(0,6).map((a,i,arr) => {
+    const ok = a.score >= PASS_SCORE, no = state.attempts.length - i;
+    return `<div class="flex items-center gap-3 p-3 rounded-2xl bg-slate-50"><span class="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold ${ok?'bg-emerald-100 text-emerald-700':'bg-orange-100 text-orange-600'}">${no}</span><div class="flex-1 min-w-0"><div class="text-sm font-semibold">${a.score}/10 <span class="text-xs font-normal ${ok?'text-emerald-600':'text-orange-600'}">· ${ok?'ผ่าน':'ไม่ผ่าน'}</span></div><div class="text-xs text-slate-400">${esc(a.date)}</div></div>${progressBar(a.score*10,'h-2').replace('<div class="h-2','<div style="width:70px" class="h-2')}</div>`;
+  }).join('') + `</div>`;
+}
+function shuffleArray(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } }
+function startQuiz(){
+  if(!state.name){ openProfile(true); return; }
+  currentQuiz = JSON.parse(JSON.stringify(quizQuestions));
+  shuffleArray(currentQuiz);
+  currentQuiz.forEach(q => { const correct = q.options[q.answer]; shuffleArray(q.options); q.answer = q.options.indexOf(correct); });
+  quizAnswers = new Array(currentQuiz.length).fill(null);
+  quizMode = 'doing'; go('quiz');
+}
+function quizDoing(){
+  return `
+  <div class="sticky top-16 z-10 -mx-4 lg:-mx-8 px-4 lg:px-8 py-3 bg-white/90 backdrop-blur border-b border-violet-100 mb-6">
+    <div class="flex items-center justify-between mb-2"><span class="font-bold">กำลังทำแบบทดสอบ · ${esc(state.name)}</span><span class="text-sm font-semibold text-violet-700"><span id="ansCount">0</span>/${currentQuiz.length} ตอบแล้ว</span></div>
+    <div class="h-2 bg-violet-100 rounded-full overflow-hidden"><div id="ansBar" class="bar h-full rounded-full" style="width:0%"></div></div>
+  </div>
+  <div class="space-y-5 max-w-3xl mx-auto">
+    ${currentQuiz.map((q,qi) => `
+    <div class="card p-5 md:p-7" id="qcard${qi}">
+      <p class="font-semibold text-lg leading-relaxed mb-4"><span class="inline-flex w-8 h-8 rounded-full bg-violet-100 text-violet-700 items-center justify-center text-sm mr-2">${qi+1}</span>${q.q}</p>
+      <div class="space-y-2.5">
+        ${q.options.map((o,oi) => `<label class="flex items-start gap-3 p-3.5 rounded-xl border border-violet-100 bg-violet-50/30 hover:bg-violet-50 hover:border-violet-300 cursor-pointer transition has-[:checked]:bg-violet-100 has-[:checked]:border-violet-500">
+          <input type="radio" name="q${qi}" class="mt-1 w-4 h-4 accent-violet-600" onchange="pick(${qi},${oi})"><span class="text-slate-700">${o}</span></label>`).join('')}
+      </div>
+    </div>`).join('')}
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+      <span class="text-sm text-slate-500"><i class="fa-solid fa-circle-info mr-1"></i>ตรวจสอบให้ครบทุกข้อก่อนส่ง</span>
+      <button onclick="submitQuiz()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-lg shadow-orange-200 transition">ส่งคำตอบ <i class="fa-solid fa-paper-plane ml-1"></i></button>
+    </div>
+  </div>`;
+}
+function pick(qi, oi){
+  quizAnswers[qi] = oi;
+  const n = quizAnswers.filter(a => a !== null).length;
+  document.getElementById('ansCount').textContent = n;
+  document.getElementById('ansBar').style.width = (n / currentQuiz.length * 100) + '%';
+}
+function submitQuiz(){
+  const un = quizAnswers.findIndex(a => a === null);
+  if(un !== -1){
+    showModal('ยังทำไม่ครบ', `กรุณาตอบให้ครบทุกข้อ\n(ยังไม่ได้ทำข้อ ${un+1})`, 'warning');
+    const c = document.getElementById('qcard'+un); if(c) c.scrollIntoView({ behavior:'smooth', block:'center' });
+    return;
+  }
+  let score = 0; quizAnswers.forEach((a,i) => { if(a === currentQuiz[i].answer) score++; });
+  const date = new Date().toLocaleString('th-TH', { dateStyle:'medium', timeStyle:'short' });
+  state.attempts.push({ score, date }); saveState();
+  lastResult = { score, date, questions: currentQuiz, answers: quizAnswers.slice(), saveState:'saving' };
+  quizMode = 'result'; go('quiz', 'keep');
+  submitToGoogleSheet(state.name, score);
+}
+function quizResult(){
+  const r = lastResult, ok = r.score >= PASS_SCORE;
+  return `
+  <div id="printArea" class="max-w-3xl mx-auto">
+    <div class="card p-8 text-center relative overflow-hidden">
+      <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full ${ok?'bg-emerald-100':'bg-orange-100'}"></div>
+      <h1 class="hidden print:block text-xl font-bold mb-4">ผลการทดสอบ: เทคโนโลยีดิจิทัลและอินเทอร์เน็ต หน่วยที่ 1</h1>
+      <div class="relative w-24 h-24 mx-auto rounded-full flex items-center justify-center text-5xl text-white shadow-xl ${ok?'bg-gradient-to-br from-emerald-400 to-teal-500':'bg-gradient-to-br from-orange-400 to-rose-500'}"><i class="fa-solid ${ok?'fa-trophy':'fa-rotate-right'}"></i></div>
+      <h2 class="text-2xl font-bold mt-5">${ok?'ยินดีด้วย คุณสอบผ่าน!':'ยังไม่ผ่านเกณฑ์ ลองอีกครั้งนะ'}</h2>
+      <p class="text-slate-500 mt-1">ผู้เข้าสอบ: <span class="font-semibold text-violet-700">${esc(state.name)}</span> · ${esc(r.date)}</p>
+      <div class="mt-5 inline-flex items-end gap-2 px-10 py-5 rounded-3xl bg-violet-50"><span class="text-6xl font-black text-violet-700 leading-none">${r.score}</span><span class="text-2xl font-bold text-slate-300 mb-1">/ 10</span></div>
+      <div class="mt-5 inline-flex items-center gap-3 px-4 py-2.5 rounded-xl border bg-white text-sm" id="saveBox"><i id="saveIcon" class="fa-solid fa-circle-notch fa-spin text-violet-500"></i><span id="saveText">กำลังบันทึกคะแนน...</span></div>
+      <div class="no-print flex flex-col sm:flex-row justify-center gap-3 mt-7 pt-6 border-t border-violet-100">
+        <button onclick="window.print()" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-semibold"><i class="fa-solid fa-print mr-2"></i>พิมพ์ / บันทึก PDF</button>
+        <button onclick="startQuiz()" class="px-6 py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold"><i class="fa-solid fa-rotate-right mr-2"></i>ทำอีกครั้ง</button>
+        <button onclick="quizMode='intro';go('dashboard')" class="px-6 py-3 rounded-xl bg-violet-100 hover:bg-violet-200 text-violet-700 font-semibold">กลับแดชบอร์ด</button>
+      </div>
+    </div>
+    <h3 class="font-bold text-lg mt-8 mb-3 no-print"><i class="fa-solid fa-magnifying-glass text-orange-500 mr-2"></i>เฉลยและทบทวนคำตอบ</h3>
+    <div class="space-y-3 no-print">
+      ${r.questions.map((q,i) => { const mine = r.answers[i], right = mine === q.answer; return `
+      <div class="card p-5 border-l-4 ${right?'!border-l-emerald-500':'!border-l-orange-500'}">
+        <div class="flex gap-3"><span class="w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-white text-sm ${right?'bg-emerald-500':'bg-orange-500'}"><i class="fa-solid ${right?'fa-check':'fa-xmark'}"></i></span>
+        <div class="min-w-0"><p class="font-medium leading-relaxed">${i+1}. ${q.q}</p>
+          <p class="text-sm mt-2 ${right?'text-emerald-700':'text-orange-700'}">คำตอบของคุณ: ${q.options[mine]}</p>
+          ${right?'':`<p class="text-sm text-emerald-700 mt-0.5">เฉลย: ${q.options[q.answer]}</p>`}</div></div>
+      </div>`; }).join('')}
+    </div>
+  </div>`;
+}
+function setSaveStatus(kind, text){
+  const icon = document.getElementById('saveIcon'), t = document.getElementById('saveText'), box = document.getElementById('saveBox');
+  if(!icon) return;
+  icon.className = kind === 'ok' ? 'fa-solid fa-circle-check text-emerald-500' : 'fa-solid fa-circle-xmark text-rose-500';
+  t.textContent = text;
+  box.className = 'mt-5 inline-flex items-center gap-3 px-4 py-2.5 rounded-xl border text-sm ' + (kind === 'ok' ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-rose-50 border-rose-100 text-rose-700');
+}
+function submitToGoogleSheet(name, score){
+  if(!GOOGLE_SCRIPT_URL || !GOOGLE_SCRIPT_URL.trim()){
+    setTimeout(() => setSaveStatus('ok', 'บันทึกในเครื่องแล้ว (โหมดทดลอง ยังไม่ได้เชื่อมต่อ Google Sheets)'), 800);
+    return;
+  }
+  const fd = new FormData(); fd.append('name', name); fd.append('score', score);
+  fetch(GOOGLE_SCRIPT_URL, { method:'POST', body:fd, mode:'no-cors' })
+    .then(() => setSaveStatus('ok', 'บันทึกคะแนนลงระบบเรียบร้อยแล้ว!'))
+    .catch(err => { setSaveStatus('err', 'เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์ (คะแนนยังถูกเก็บไว้ในเครื่องนี้)'); console.error(err); });
+}
+
+/* =========================================================
+   Assignments
+   ========================================================= */
+function viewAssign(){
+  const m = metrics();
+  return `
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
+    <div><div class="text-xs font-semibold text-orange-500">หน่วยที่ ${COURSE.unitNo}</div><h1 class="text-2xl md:text-3xl font-bold mt-1">งานที่ได้รับมอบหมาย</h1></div>
+    <div class="card px-5 py-3 flex items-center gap-4 !rounded-2xl"><div class="text-sm"><span class="font-bold text-violet-700 text-lg">${m.aDone}/${assignments.length}</span> <span class="text-slate-500">ส่งแล้ว</span></div><div class="w-32">${progressBar(m.assignPct)}</div></div>
+  </div>
+  <div class="space-y-5">
+  ${assignments.map(a => { const s = state.assign[a.id] || {}, done = !!s.done; return `
+    <div class="card p-6">
+      <div class="flex flex-col md:flex-row md:items-start justify-between gap-3">
+        <div class="flex gap-4"><div class="w-12 h-12 rounded-2xl shrink-0 flex items-center justify-center text-xl ${done?'bg-emerald-100 text-emerald-600':'bg-orange-100 text-orange-500'}"><i class="fa-solid ${done?'fa-circle-check':'fa-file-pen'}"></i></div>
+          <div><h3 class="font-bold text-lg">${a.title}</h3><p class="text-sm text-slate-500 mt-1 leading-relaxed">${a.desc}</p>
+          <div class="flex flex-wrap gap-2 mt-3 text-xs"><span class="px-2.5 py-1 rounded-full bg-violet-100 text-violet-700">หัวข้อ: ${a.topic}</span><span class="px-2.5 py-1 rounded-full bg-orange-100 text-orange-700">เต็ม ${a.points} คะแนน</span></div></div></div>
+        <span class="self-start shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold ${s.graded?'bg-violet-100 text-violet-700':(done?'bg-emerald-100 text-emerald-700':'bg-slate-100 text-slate-600')}">${s.graded?`ตรวจแล้ว · ${s.score}/${a.points} คะแนน`:(done?'ส่งแล้ว · รอครูตรวจ':'ยังไม่ส่ง')}</span>
+      </div>
+      <textarea id="ans_${a.id}" rows="3" ${done?'disabled':''} placeholder="พิมพ์คำตอบของคุณที่นี่..." class="mt-4 w-full p-4 rounded-xl border border-violet-200 bg-violet-50/30 focus:outline-none focus:ring-4 focus:ring-violet-100 focus:border-violet-400 disabled:bg-slate-50 disabled:text-slate-500">${esc(s.text||'')}</textarea>
+      ${s.graded&&s.feedback?`<div class="mt-3 p-3 rounded-xl bg-orange-50 border border-orange-100 text-sm"><b class="text-orange-600">ความเห็นครู:</b> ${esc(s.feedback)}</div>`:''}
+      <div class="flex items-center justify-between mt-3">
+        <span class="text-xs text-slate-400">${done?`ส่งเมื่อ ${esc(s.date)}`:'กดส่งงานเมื่อทำเสร็จ'}</span>
+        ${done?`<button onclick="undoAssign('${a.id}')" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-sm font-medium">ยกเลิกการส่งเพื่อแก้ไข</button>`
+              :`<button onclick="submitAssign('${a.id}')" class="px-6 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-semibold shadow-md shadow-violet-200"><i class="fa-solid fa-paper-plane mr-2"></i>ส่งงาน</button>`}
+      </div>
+    </div>`; }).join('')}
+  </div>
+  <div class="mt-6 text-center"><button onclick="syncGrades(true)" class="px-5 py-2.5 rounded-xl bg-orange-50 text-orange-600 hover:bg-orange-100 text-sm font-medium"><i class="fa-solid fa-rotate mr-2"></i>ดึงคะแนนล่าสุดจากครู</button><p class="text-xs text-slate-400 mt-3">งานที่ส่งจะถูกบันทึกใน Google Sheet ของครู และคะแนนที่ครูตรวจจะแสดงที่นี่</p></div>`;
+}
+function submitAssign(id){
+  const txt = document.getElementById('ans_'+id).value.trim();
+  if(!txt){ showModal('ยังไม่มีคำตอบ', 'กรุณาพิมพ์คำตอบก่อนกดส่งงาน', 'warning'); return; }
+  state.assign[id] = { done:true, text:txt, date:new Date().toLocaleString('th-TH', { dateStyle:'medium', timeStyle:'short' }) };
+  saveState(); sendAssign(id, txt); go('assign');
+}
+function sendAssign(id, text){
+  if(!GOOGLE_SCRIPT_URL || !GOOGLE_SCRIPT_URL.trim() || !state.name) return;
+  const fd = new FormData(); fd.append('action','submitAssign'); fd.append('name',state.name); fd.append('id',id); fd.append('answer',text);
+  fetch(GOOGLE_SCRIPT_URL, { method:'POST', body:fd, mode:'no-cors' }).catch(e => console.error(e));
+}
+let gradesSynced = false;
+async function syncGrades(manual){
+  if(!GOOGLE_SCRIPT_URL || !GOOGLE_SCRIPT_URL.trim() || !state.name){ if(manual) showModal('ยังซิงค์ไม่ได้','กรุณาตั้งชื่อผู้เรียนก่อน','warning'); return; }
+  try{
+    const res = await fetch(GOOGLE_SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify({ action:'myAssignments', name:state.name }) });
+    const j = await res.json(); if(!j.ok) throw new Error(j.error || 'error');
+    let changed = false;
+    j.items.forEach(it => {
+      const s = state.assign[it.id]; if(!s) return;
+      if(it.status === 'ตรวจแล้ว'){
+        if(!s.graded || s.score !== it.score || s.feedback !== it.feedback){ s.graded = true; s.score = it.score; s.feedback = it.feedback; changed = true; }
+      } else if(s.graded){ s.graded = false; changed = true; }
+    });
+    saveState();
+    if(changed && currentView === 'assign') go('assign');
+    if(manual) showModal('อัปเดตแล้ว', changed ? 'มีคะแนนหรือความเห็นใหม่จากครู' : 'ยังไม่มีการเปลี่ยนแปลงจากครู', 'success');
+  }catch(e){ console.error(e); if(manual) showModal('เชื่อมต่อไม่สำเร็จ','ไม่สามารถดึงข้อมูลจากครูได้ในขณะนี้ ลองใหม่อีกครั้ง','warning'); }
+}
+function undoAssign(id){ if(state.assign[id]) state.assign[id].done = false; saveState(); go('assign'); }
+
+/* =========================================================
+   Scores
+   ========================================================= */
+function viewScores(){
+  const m = metrics(), st = statusOf(m);
+  const max = 10;
+  return `
+  <div class="mb-6"><div class="text-xs font-semibold text-orange-500">สรุปผลการเรียน</div><h1 class="text-2xl md:text-3xl font-bold mt-1">คะแนนและสถานะ</h1></div>
+  <div class="card p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 mb-6">
+    ${ring(m.overall, 150, 14)}
+    <div class="flex-1 w-full">
+      <div class="flex flex-wrap items-center gap-3 mb-4"><h2 class="text-xl font-bold">${state.name?esc(state.name):'ยังไม่ได้ตั้งชื่อ'}</h2><span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${st.cls}"><i class="fa-solid ${st.icon}"></i>${st.t}</span></div>
+      <div class="space-y-4">
+        ${[['บทเรียน',m.lessonPct,`${m.lessonsDone}/${topics.length} หัวข้อ`],['แบบทดสอบ',m.quizPct,m.passed?`ผ่านเกณฑ์ (${m.best}/10)`:(m.best===null?'ยังไม่ได้สอบ':`ยังไม่ผ่าน (สูงสุด ${m.best}/10)`)],['งานที่ส่ง',m.assignPct,`${m.aDone}/${assignments.length} ชิ้น`]].map(r => `
+        <div><div class="flex justify-between text-sm mb-1.5"><span class="font-medium">${r[0]}</span><span class="text-slate-500">${r[2]} · <b class="text-violet-700">${r[1]}%</b></span></div>${progressBar(r[1])}</div>`).join('')}
+      </div>
+    </div>
+  </div>
+  <div class="grid lg:grid-cols-2 gap-6">
+    <div class="card p-6">
+      <h2 class="font-bold mb-4"><i class="fa-solid fa-chart-column text-violet-500 mr-2"></i>คะแนนแบบทดสอบแต่ละครั้ง</h2>
+      ${state.attempts.length ? `<div class="flex items-end gap-3 h-44 border-b border-violet-100 px-1">
+        ${state.attempts.slice(-8).map((a,i,arr) => { const ok=a.score>=PASS_SCORE, n=state.attempts.length-arr.length+i+1; return `
+        <div class="flex-1 flex flex-col items-center justify-end h-full gap-1"><span class="text-xs font-bold ${ok?'text-emerald-600':'text-orange-600'}">${a.score}</span><div class="w-full max-w-[44px] rounded-t-lg ${ok?'bg-gradient-to-t from-violet-600 to-fuchsia-500':'bg-gradient-to-t from-orange-500 to-amber-400'}" style="height:${Math.max(a.score/max*100,4)}%"></div><span class="text-[11px] text-slate-400 mt-1">ครั้งที่ ${n}</span></div>`; }).join('')}
+      </div><p class="text-xs text-slate-400 mt-3"><span class="inline-block w-2.5 h-2.5 rounded-sm bg-violet-600 mr-1"></span>ผ่านเกณฑ์ <span class="inline-block w-2.5 h-2.5 rounded-sm bg-orange-500 mx-1 ml-3"></span>ยังไม่ผ่าน (เกณฑ์ ${PASS_SCORE}/10)</p>`
+      : '<div class="text-sm text-slate-400 py-10 text-center">ยังไม่มีผลสอบ</div>'}
+    </div>
+    <div class="card p-6">
+      <h2 class="font-bold mb-4"><i class="fa-solid fa-list-check text-orange-500 mr-2"></i>สถานะงานที่ได้รับมอบหมาย</h2>
+      <div class="divide-y divide-violet-50">
+        ${assignments.map(a => { const d = state.assign[a.id] && state.assign[a.id].done; return `<div class="py-3 flex items-center gap-3"><span class="w-2.5 h-2.5 rounded-full ${d?'bg-emerald-500':'bg-orange-400'}"></span><span class="flex-1 text-sm">${a.title}</span><span class="text-xs px-2.5 py-1 rounded-full font-medium ${d?'bg-emerald-100 text-emerald-700':'bg-slate-100 text-slate-500'}">${d?'ส่งแล้ว':'ยังไม่ส่ง'}</span><span class="text-xs text-slate-400 w-14 text-right">${(state.assign[a.id]&&state.assign[a.id].graded)?state.assign[a.id].score:(d?'รอตรวจ':'–')}/${a.points}</span></div>`; }).join('')}
+      </div>
+      <p class="text-xs text-slate-400 mt-3">คะแนนงานจะประกาศหลังครูตรวจ</p>
+    </div>
+  </div>`;
+}
+
+/* =========================================================
+   Modals / utilities
+   ========================================================= */
+function showModal(title, msg, type='info'){
+  const icons = { success:['fa-circle-check','text-emerald-500'], warning:['fa-triangle-exclamation','text-orange-500'], info:['fa-circle-info','text-violet-500'] };
+  const i = icons[type] || icons.info;
+  document.getElementById('mIcon').innerHTML = `<i class="fa-solid ${i[0]} ${i[1]}"></i>`;
+  document.getElementById('mTitle').textContent = title;
+  document.getElementById('mMsg').textContent = msg;
+  const m = document.getElementById('modal'); m.classList.remove('hidden'); m.classList.add('flex');
+}
+function closeModal(){ const m = document.getElementById('modal'); m.classList.add('hidden'); m.classList.remove('flex'); }
+
+let afterProfile = false;
+function openProfile(thenStart){
+  afterProfile = !!thenStart;
+  document.getElementById('nameInput').value = state.name || '';
+  const m = document.getElementById('profileModal'); m.classList.remove('hidden'); m.classList.add('flex');
+  setTimeout(() => document.getElementById('nameInput').focus(), 50);
+}
+function closeProfile(){ const m = document.getElementById('profileModal'); m.classList.add('hidden'); m.classList.remove('flex'); }
+function saveProfile(){
+  const v = document.getElementById('nameInput').value.trim();
+  if(!v){ document.getElementById('nameInput').focus(); return; }
+  state.name = v; saveState(); closeProfile();
+  const again = afterProfile; afterProfile = false;
+  if(again) startQuiz(); else go(currentView);
+}
+function resetAll(){
+  if(!confirm('ต้องการล้างความคืบหน้า คะแนน และงานที่ส่งทั้งหมดในเครื่องนี้ใช่หรือไม่?')) return;
+  state = { name:state.name, lessons:{}, assign:{}, attempts:[] }; saveState(); quizMode = 'intro'; closeProfile(); go('dashboard');
+}
+function toggleSheet(show){ const m = document.getElementById('sheetModal'); m.classList.toggle('hidden', !show); m.classList.toggle('flex', show); }
+function copyCode(btn){
+  const ta = document.createElement('textarea'); ta.value = document.getElementById('scriptCode').innerText;
+  ta.style.position = 'fixed'; ta.style.top = '0'; document.body.appendChild(ta); ta.select();
+  try{ if(document.execCommand('copy')){ const o = btn.innerText; btn.innerText = 'คัดลอกแล้ว!'; setTimeout(() => btn.innerText = o, 1800); } }catch(e){}
+  document.body.removeChild(ta);
+}
+
+window.onload = () => {
+  loadState();
+  go('dashboard');
+  if(!state.name) setTimeout(() => openProfile(false), 400);
+};
+</script>
+</body>
+</html>
